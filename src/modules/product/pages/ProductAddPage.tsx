@@ -222,7 +222,12 @@ export default function ProductAddPage() {
               >
                 İptal
               </Button>
-              <Button type="submit" disabled={loading} className="flex-1">
+              <Button
+                variant="outline"
+                type="submit"
+                disabled={loading}
+                className="flex-1"
+              >
                 {loading ? "Ekleniyor..." : "Ürün Ekle"}
               </Button>
             </div>
