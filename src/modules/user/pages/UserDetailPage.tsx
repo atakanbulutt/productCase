@@ -14,7 +14,11 @@ import {
   DialogTrigger,
 } from "../../../shared/components/ui/alert-dialog";
 import { useAppDispatch, useAppSelector } from "../../../shared/hooks/redux";
-import { fetchUserById, deleteUser } from "../store/userSlice";
+import {
+  fetchUserById,
+  deleteUser,
+  clearCurrentUser,
+} from "../store/userSlice";
 import { useToast } from "../../../shared/hooks/useToast";
 
 export default function UserDetailPage() {
@@ -27,8 +31,18 @@ export default function UserDetailPage() {
     (state) => state.users
   );
 
+  console.log(
+    "UserDetailPage render - loading:",
+    loading,
+    "currentUser:",
+    currentUser?.firstName
+  );
+
   useEffect(() => {
+    console.log("UserDetailPage - ID:", id);
+    dispatch(clearCurrentUser());
     if (id) {
+      console.log("Dispatching fetchUserById for ID:", id);
       dispatch(fetchUserById(id));
     }
   }, [dispatch, id]);
@@ -52,7 +66,7 @@ export default function UserDetailPage() {
     }
   };
 
-  if (loading) {
+  if (loading && !currentUser) {
     return (
       <div className="flex justify-center items-center h-64">
         <div className="text-lg">Yükleniyor...</div>
