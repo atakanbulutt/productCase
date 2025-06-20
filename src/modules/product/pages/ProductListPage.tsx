@@ -46,7 +46,7 @@ export default function ProductListPage() {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-xl font-bold text-gray-900">Ürünler</h1>
+        <h3 className="text-xl font-bold text-gray-900">Ürünler</h3>
         <Link to="/products/add">
           <Button>
             <Plus className="w-4 h-4 mr-2" />

@@ -36,7 +36,7 @@ export default function UserListPage() {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-xl font-bold text-gray-900">Kullanıcılar</h1>
+        <h3 className="text-xl font-bold text-gray-900">Kullanıcılar</h3>
         <div className="flex justify-between items-center">
           <Link to="/users/add">
             <Button>
