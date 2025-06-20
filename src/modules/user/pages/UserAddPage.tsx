@@ -59,9 +59,7 @@ export default function UserAddPage() {
           <ArrowLeft className="w-4 h-4" />
           <span>Geri Dön</span>
         </Button>
-        <h3 className="text-2xl font-bold text-gray-900">
-          Yeni Kullanıcı Ekle
-        </h3>
+        <p className="text-2xl font-bold text-gray-900">Yeni Kullanıcı Ekle</p>
       </div>
 
       <Card>
