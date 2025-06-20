@@ -3,6 +3,16 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { ArrowLeft, Heart, Edit2, Trash2 } from "lucide-react";
 import { Button } from "../../../shared/components/ui/button";
 import { Card, CardContent } from "../../../shared/components/ui/card";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../../../shared/components/ui/alert-dialog.tsx";
 import { useAppDispatch, useAppSelector } from "../../../shared/hooks/redux";
 import {
   fetchProducts,
@@ -34,10 +44,7 @@ export default function ProductDetailPage() {
   };
 
   const handleDelete = () => {
-    if (
-      product &&
-      window.confirm("Bu ürünü silmek istediğinizden emin misiniz?")
-    ) {
+    if (product) {
       dispatch(deleteProduct(product.id));
       navigate("/products");
     }
@@ -112,13 +119,36 @@ export default function ProductDetailPage() {
             </Button>
           </Link>
 
-          <Button
-            variant="destructive"
-            onClick={handleDelete}
-            className="hover:opacity-80 transition-opacity"
-          >
-            <Trash2 className="w-4 h-4 mr-2" />
-          </Button>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button
+                variant="destructive"
+                className="hover:opacity-80 transition-opacity"
+              >
+                <Trash2 className="w-4 h-4 mr-2" />
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="bg-white">
+              <DialogHeader>
+                <DialogTitle>
+                  Ürünü silmek istediğinizden emin misiniz?
+                </DialogTitle>
+                <DialogDescription>
+                  Bu işlem geri alınamaz. Ürün kalıcı olarak silinecektir.
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter>
+                <DialogClose asChild>
+                  <Button type="button" variant="outline">
+                    Kapat
+                  </Button>
+                </DialogClose>
+                <Button variant="outline" onClick={handleDelete}>
+                  Sil
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
 
