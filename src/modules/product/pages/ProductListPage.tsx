@@ -18,7 +18,7 @@ export default function ProductListPage() {
     if (filteredProducts.length === 0) {
       dispatch(fetchProducts());
     }
-  }, [dispatch]);
+  }, [dispatch, filteredProducts.length]);
 
   useEffect(() => {
     console.log(
