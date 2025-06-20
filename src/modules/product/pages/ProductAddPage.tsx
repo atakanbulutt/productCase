@@ -12,12 +12,13 @@ import {
 import { useAppDispatch, useAppSelector } from "../../../shared/hooks/redux.ts";
 import { createProduct } from "../store/productSlice.ts";
 import type { CreateProductDto } from "../types/index.ts";
+import { useToast } from "../../../shared/hooks/useToast.ts";
 
 export default function ProductAddPage() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { categories, loading } = useAppSelector((state) => state.products);
-
+  const toast = useToast();
   const [formData, setFormData] = useState<CreateProductDto>({
     name: "",
     description: "",
@@ -73,12 +74,17 @@ export default function ProductAddPage() {
     if (!validateForm()) return;
 
     try {
-      console.log("Ürün ekleme başlıyor:", formData);
       const result = await dispatch(createProduct(formData)).unwrap();
       console.log("Ürün başarıyla eklendi:", result);
+      toast.toast({
+        title: "Ürün başarıyla eklendi",
+      });
       navigate("/products");
     } catch (error) {
       console.error("Ürün eklenirken hata:", error);
+      toast.toast({
+        title: "Ürün eklenirken bir hata oluştu",
+      });
       setErrors({ general: "Ürün eklenirken bir hata oluştu" });
     }
   };

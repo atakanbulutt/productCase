@@ -12,7 +12,7 @@ import {
 import { useAppDispatch, useAppSelector } from "../../../shared/hooks/redux.ts";
 import { fetchProducts, updateProduct } from "../store/productSlice.ts";
 import type { UpdateProductDto } from "../types/index.ts";
-
+import { useToast } from "../../../shared/hooks/useToast.ts";
 export default function ProductEditPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -20,7 +20,7 @@ export default function ProductEditPage() {
   const { products, categories, loading } = useAppSelector(
     (state) => state.products
   );
-
+  const toast = useToast();
   const product = products.find((p) => p.id === id);
 
   const [formData, setFormData] = useState<UpdateProductDto>({
@@ -105,9 +105,15 @@ export default function ProductEditPage() {
 
     try {
       await dispatch(updateProduct({ id, data: formData })).unwrap();
+      toast.toast({
+        title: "Ürün başarıyla güncellendi",
+      });
       navigate(`/products/${id}`);
     } catch (error) {
-      console.error("Ürün güncellenirken hata:", error);
+      console.log(error);
+      toast.toast({
+        title: "Ürün güncellenirken hata oluştu",
+      });
     }
   };
 

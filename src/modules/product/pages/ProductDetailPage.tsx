@@ -19,11 +19,13 @@ import {
   toggleFavorite,
   deleteProduct,
 } from "../store/productSlice";
+import { useToast } from "../../../shared/hooks/useToast";
 
 export default function ProductDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const toast = useToast();
 
   const { products, favorites, loading, error } = useAppSelector(
     (state) => state.products
@@ -43,10 +45,20 @@ export default function ProductDetailPage() {
     }
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (product) {
-      dispatch(deleteProduct(product.id));
-      navigate("/products");
+      try {
+        await dispatch(deleteProduct(product.id)).unwrap();
+        toast.toast({
+          title: "Ürün başarıyla silindi",
+        });
+        navigate("/products");
+      } catch (error) {
+        console.log(error);
+        toast.toast({
+          title: "Ürün silinirken hata oluştu",
+        });
+      }
     }
   };
 
@@ -86,7 +98,6 @@ export default function ProductDetailPage() {
           className="flex items-center space-x-2"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>Ürünlere Dön</span>
         </Button>
 
         <div className="flex space-x-2">
