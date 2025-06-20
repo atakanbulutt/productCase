@@ -1,8 +1,29 @@
 import { Outlet, Link, useLocation } from "react-router-dom";
 import { Button } from "../../shared/components/ui/button";
 
+const navigationItems = [
+  {
+    path: "/products",
+    label: "Ürünler",
+  },
+  {
+    path: "/users",
+    label: "Kullanıcılar",
+  },
+];
+
 export default function Layout() {
   const location = useLocation();
+
+  const isActive = (path: string) => location.pathname.startsWith(path);
+
+  const getButtonStyle = (path: string) => ({
+    backgroundColor: isActive(path) ? "#DBEAFE" : "transparent",
+    color: "#000000",
+    borderBottom: isActive(path)
+      ? "3px solid ##DBEAFE"
+      : "3px solid transparent",
+  });
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -14,28 +35,17 @@ export default function Layout() {
                 Product Catalog
               </Link>
               <nav className="flex space-x-4">
-                <Link to="/products">
-                  <Button
-                    variant={
-                      location.pathname.startsWith("/products")
-                        ? "default"
-                        : "ghost"
-                    }
-                  >
-                    Ürünler
-                  </Button>
-                </Link>
-                <Link to="/users">
-                  <Button
-                    variant={
-                      location.pathname.startsWith("/users")
-                        ? "default"
-                        : "ghost"
-                    }
-                  >
-                    Kullanıcılar
-                  </Button>
-                </Link>
+                {navigationItems.map((item) => (
+                  <Link key={item.path} to={item.path}>
+                    <Button
+                      variant={isActive(item.path) ? "default" : "ghost"}
+                      style={getButtonStyle(item.path)}
+                      className="transition-all duration-200"
+                    >
+                      {item.label}
+                    </Button>
+                  </Link>
+                ))}
               </nav>
             </div>
           </div>

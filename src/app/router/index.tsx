@@ -7,6 +7,7 @@ import ProductEditPage from "../../modules/product/pages/ProductEditPage.tsx";
 import UserListPage from "../../modules/user/pages/UserListPage.tsx";
 import UserDetailPage from "../../modules/user/pages/UserDetailPage.tsx";
 import UserEditPage from "../../modules/user/pages/UserEditPage.tsx";
+import UserAddPage from "../../modules/user/pages/UserAddPage.tsx";
 
 export const router = createBrowserRouter([
   {
@@ -44,6 +45,10 @@ export const router = createBrowserRouter([
           {
             index: true,
             element: <UserListPage />,
+          },
+          {
+            path: "add",
+            element: <UserAddPage />,
           },
           {
             path: ":id",

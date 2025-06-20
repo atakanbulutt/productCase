@@ -1,25 +1,20 @@
-import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Save } from "lucide-react";
 import { Button } from "../../../shared/components/ui/button";
 import { Input } from "../../../shared/components/ui/input";
 import { Card, CardContent } from "../../../shared/components/ui/card";
-import { useAppDispatch, useAppSelector } from "../../../shared/hooks/redux";
-import { fetchUserById, updateUser } from "../store/userSlice";
+import { useAppDispatch } from "../../../shared/hooks/redux";
+import { createUser } from "../store/userSlice";
 import { useToast } from "../../../shared/hooks/useToast";
-import type { UpdateUserDto } from "../types/index";
+import type { CreateUserDto } from "../types/index";
 
-export default function UserEditPage() {
-  const { id } = useParams<{ id: string }>();
+export default function UserAddPage() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { toast } = useToast();
 
-  const { currentUser, loading, error } = useAppSelector(
-    (state) => state.users
-  );
-
-  const [formData, setFormData] = useState<UpdateUserDto>({
+  const [formData, setFormData] = useState<CreateUserDto>({
     firstName: "",
     lastName: "",
     email: "",
@@ -34,84 +29,39 @@ export default function UserEditPage() {
     },
   });
 
-  useEffect(() => {
-    if (id) {
-      dispatch(fetchUserById(id));
-    }
-  }, [dispatch, id]);
-
-  useEffect(() => {
-    if (currentUser) {
-      setFormData({
-        firstName: currentUser.firstName,
-        lastName: currentUser.lastName,
-        email: currentUser.email,
-        phone: currentUser.phone,
-        avatar: currentUser.avatar,
-        address: currentUser.address,
-      });
-    }
-  }, [currentUser]);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!currentUser) return;
 
     try {
-      await dispatch(
-        updateUser({ id: currentUser.id, data: formData })
-      ).unwrap();
+      await dispatch(createUser(formData)).unwrap();
       toast({
-        title: "Kullanıcı Başarıyla Güncellendi",
+        title: "Kullanıcı Başarıyla Oluşturuldu",
         variant: "default",
       });
-      navigate(`/users/${currentUser.id}`);
+      navigate("/users");
     } catch (error) {
-      console.log(error);
       toast({
-        title: "Kullanıcı Güncellenemedi",
+        title: "Hata",
         variant: "destructive",
       });
+      console.log(error);
     }
   };
-
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <div className="text-lg">Yükleniyor...</div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <div className="text-lg text-red-600">Hata: {error}</div>
-      </div>
-    );
-  }
-
-  if (!currentUser) {
-    return (
-      <div className="flex flex-col items-center justify-center h-64 space-y-4">
-        <div className="text-lg text-gray-600">Kullanıcı bulunamadı</div>
-        <Button onClick={() => navigate("/users")}>Kullanıcılara Dön</Button>
-      </div>
-    );
-  }
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
         <Button
           variant="ghost"
-          onClick={() => navigate(`/users/${currentUser.id}`)}
+          onClick={() => navigate("/users")}
           className="flex items-center space-x-2"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Geri Dön</span>
         </Button>
-        <h1 className="text-2xl font-bold text-gray-900">Kullanıcı Düzenle</h1>
+        <h3 className="text-2xl font-bold text-gray-900">
+          Yeni Kullanıcı Ekle
+        </h3>
       </div>
 
       <Card>
@@ -120,7 +70,7 @@ export default function UserEditPage() {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Ad
+                  Ad *
                 </label>
                 <Input
                   type="text"
@@ -133,7 +83,7 @@ export default function UserEditPage() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Soyad
+                  Soyad *
                 </label>
                 <Input
                   type="text"
@@ -148,7 +98,7 @@ export default function UserEditPage() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                E-posta
+                E-posta *
               </label>
               <Input
                 type="email"
@@ -162,7 +112,7 @@ export default function UserEditPage() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Telefon
+                Telefon *
               </label>
               <Input
                 type="tel"
@@ -176,7 +126,7 @@ export default function UserEditPage() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Avatar URL
+                Avatar URL *
               </label>
               <Input
                 type="url"
@@ -184,6 +134,7 @@ export default function UserEditPage() {
                 onChange={(e) =>
                   setFormData({ ...formData, avatar: e.target.value })
                 }
+                placeholder="https://example.com/avatar.jpg"
                 required
               />
             </div>
@@ -195,15 +146,15 @@ export default function UserEditPage() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Sokak
+                  Sokak *
                 </label>
                 <Input
                   type="text"
-                  value={formData.address?.street || ""}
+                  value={formData.address.street}
                   onChange={(e) =>
                     setFormData({
                       ...formData,
-                      address: { ...formData.address!, street: e.target.value },
+                      address: { ...formData.address, street: e.target.value },
                     })
                   }
                   required
@@ -213,15 +164,15 @@ export default function UserEditPage() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Şehir
+                    Şehir *
                   </label>
                   <Input
                     type="text"
-                    value={formData.address?.city || ""}
+                    value={formData.address.city}
                     onChange={(e) =>
                       setFormData({
                         ...formData,
-                        address: { ...formData.address!, city: e.target.value },
+                        address: { ...formData.address, city: e.target.value },
                       })
                     }
                     required
@@ -229,18 +180,15 @@ export default function UserEditPage() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Eyalet/İl
+                    Eyalet/İl *
                   </label>
                   <Input
                     type="text"
-                    value={formData.address?.state || ""}
+                    value={formData.address.state}
                     onChange={(e) =>
                       setFormData({
                         ...formData,
-                        address: {
-                          ...formData.address!,
-                          state: e.target.value,
-                        },
+                        address: { ...formData.address, state: e.target.value },
                       })
                     }
                     required
@@ -251,16 +199,16 @@ export default function UserEditPage() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Posta Kodu
+                    Posta Kodu *
                   </label>
                   <Input
                     type="text"
-                    value={formData.address?.zipCode || ""}
+                    value={formData.address.zipCode}
                     onChange={(e) =>
                       setFormData({
                         ...formData,
                         address: {
-                          ...formData.address!,
+                          ...formData.address,
                           zipCode: e.target.value,
                         },
                       })
@@ -270,16 +218,16 @@ export default function UserEditPage() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Ülke
+                    Ülke *
                   </label>
                   <Input
                     type="text"
-                    value={formData.address?.country || ""}
+                    value={formData.address.country}
                     onChange={(e) =>
                       setFormData({
                         ...formData,
                         address: {
-                          ...formData.address!,
+                          ...formData.address,
                           country: e.target.value,
                         },
                       })
@@ -294,12 +242,11 @@ export default function UserEditPage() {
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => navigate(`/users/${currentUser.id}`)}
+                onClick={() => navigate("/users")}
               >
                 İptal
               </Button>
-              <Button type="submit">
-                <Save className="w-4 h-4 mr-2" />
+              <Button type="submit" variant="outline">
                 Kaydet
               </Button>
             </div>

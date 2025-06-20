@@ -26,7 +26,7 @@ export const mockUsers: User[] = [
     email: "zeynep.demir@email.com",
     phone: "+90 533 234 5678",
     avatar:
-      "https://images.unsplash.com/photo-1494790108755-2616b612b665?w=100",
+      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100",
     address: {
       street: "Bağdat Caddesi No: 456",
       city: "İstanbul",

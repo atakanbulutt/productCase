@@ -179,7 +179,7 @@ export default function ProductDetailPage() {
                 <span className="inline-block px-3 py-1 text-xs font-medium bg-gray-100 text-gray-800 rounded-full mb-3">
                   {product.category}
                 </span>
-                <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                <h1 className="text-xl font-bold text-gray-900 mb-2">
                   {product.name}
                 </h1>
                 <p className="text-4xl font-bold text-green-600">
