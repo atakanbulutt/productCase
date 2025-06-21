@@ -229,7 +229,7 @@ export default function UserEditPage() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Eyalet/İl
+                    İlçe
                   </label>
                   <Input
                     type="text"

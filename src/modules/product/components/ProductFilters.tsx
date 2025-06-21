@@ -68,18 +68,33 @@ export default function ProductFilters() {
           />
         </div>
 
+        {/* Masaüstü için Temizle */}
         {hasActiveFilters && (
           <Button
             variant="outline"
-            size="sm"
+            size="default"
             onClick={handleClearFilters}
-            className="text-gray-600 hover:text-gray-800"
+            className="text-gray-600 hover:text-gray-800 hidden md:flex"
           >
-            <X className="w-4 h-4 mr-1" />
+            <X className="w-4 h-4 ml-1" />
             Temizle
           </Button>
         )}
       </div>
+
+      {/* Mobil için Temizle */}
+      {hasActiveFilters && (
+        <div className="md:hidden">
+          <Button
+            variant="outline"
+            onClick={handleClearFilters}
+            className="w-full text-gray-600 hover:text-gray-800"
+          >
+            <X className="w-4 h-4 mr-1" />
+            Temizle
+          </Button>
+        </div>
+      )}
 
       <div className="flex flex-wrap gap-2">
         <span className="text-sm font-medium text-gray-700 py-2">
