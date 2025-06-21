@@ -263,7 +263,12 @@ export default function ProductEditPage() {
               >
                 İptal
               </Button>
-              <Button type="submit" disabled={loading} className="flex-1">
+              <Button
+                type="submit"
+                disabled={loading}
+                className="flex-1"
+                variant="outline"
+              >
                 {loading ? "Güncelleniyor..." : "Güncelle"}
               </Button>
             </div>

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { memo, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Plus } from "lucide-react";
 import { Button } from "../../../shared/components/ui/button.tsx";
@@ -13,20 +13,14 @@ export default function ProductListPage() {
   const { filteredProducts, loading, error, products } = useAppSelector(
     (state) => state.products
   );
-  console.log("filteredProducts", filteredProducts);
+  const MemoizedProductCard = memo(ProductCard);
+  const hasProducts = filteredProducts.length > 0;
 
   useEffect(() => {
     if (products.length === 0) {
       dispatch(fetchProducts());
     }
-  }, [dispatch, products.length]);
-
-  useEffect(() => {
-    console.log(
-      "ProductListPage render - filteredProducts:",
-      filteredProducts.length
-    );
-  }, [filteredProducts]);
+  }, [products.length, dispatch]);
 
   if (loading && filteredProducts.length === 0) {
     return (
@@ -58,10 +52,10 @@ export default function ProductListPage() {
 
       <ProductFilters />
 
-      {filteredProducts.length > 0 ? (
+      {hasProducts ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {filteredProducts.map((product: Product) => (
-            <ProductCard key={product.id} product={product} />
+            <MemoizedProductCard key={product.id} product={product} />
           ))}
         </div>
       ) : (

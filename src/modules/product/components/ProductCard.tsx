@@ -5,25 +5,27 @@ import { useAppDispatch, useAppSelector } from "../../../shared/hooks/redux.ts";
 import { toggleFavorite } from "../store/productSlice.ts";
 import type { Product } from "../types/index.ts";
 import { Button } from "../../../shared/components/ui/button.tsx";
+import { memo, useCallback } from "react";
 
 interface ProductCardProps {
   product: Product;
 }
 
-export default function ProductCard({ product }: ProductCardProps) {
+function ProductCard({ product }: ProductCardProps) {
   const dispatch = useAppDispatch();
   const { favorites } = useAppSelector((state) => state.products);
   const isFavorite = favorites.includes(product.id);
 
-  const handleToggleFavorite = () => {
+  const handleToggleFavorite = useCallback(() => {
     dispatch(toggleFavorite(product.id));
-  };
+  }, [dispatch, product.id]);
 
   return (
     <Card className="group relative overflow-hidden transition-all duration-200 hover:shadow-lg">
       <div className="relative">
         <img
           src={product.imageUrl}
+          loading="lazy"
           alt={product.name}
           className="w-full h-48 object-cover"
         />
@@ -78,3 +80,4 @@ export default function ProductCard({ product }: ProductCardProps) {
     </Card>
   );
 }
+export default memo(ProductCard);

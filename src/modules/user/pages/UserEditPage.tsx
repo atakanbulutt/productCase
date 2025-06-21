@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Save } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { Button } from "../../../shared/components/ui/button";
 import { Input } from "../../../shared/components/ui/input";
 import { Card, CardContent } from "../../../shared/components/ui/card";
@@ -298,8 +298,7 @@ export default function UserEditPage() {
               >
                 İptal
               </Button>
-              <Button type="submit">
-                <Save className="w-4 h-4 mr-2" />
+              <Button type="submit" variant="outline">
                 Kaydet
               </Button>
             </div>
