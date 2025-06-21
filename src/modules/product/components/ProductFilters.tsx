@@ -1,19 +1,42 @@
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Search, X } from "lucide-react";
 import { Input } from "../../../shared/components/ui/input.tsx";
 import { Button } from "../../../shared/components/ui/button.tsx";
 import { useAppDispatch, useAppSelector } from "../../../shared/hooks/redux.ts";
 import { setFilters, clearFilters } from "../store/productSlice.ts";
 
+const debounce = (func: (value: string) => void, delay: number) => {
+  let timeoutId: number;
+  return (value: string) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => func(value), delay);
+  };
+};
+
 export default function ProductFilters() {
   const dispatch = useAppDispatch();
   const { filters, categories } = useAppSelector((state) => state.products);
   const [searchValue, setSearchValue] = useState(filters.search || "");
 
+  useEffect(() => {
+    setSearchValue(filters.search || "");
+  }, [filters.search]);
+
+  const debouncedSearch = useCallback(
+    debounce((value: string) => {
+      if (value.length >= 1) {
+        dispatch(setFilters({ ...filters, search: value }));
+      } else {
+        dispatch(setFilters({ ...filters, search: undefined }));
+      }
+    }, 300),
+    [dispatch, filters]
+  );
+
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearchValue(value);
-    dispatch(setFilters({ ...filters, search: value }));
+    debouncedSearch(value);
   };
 
   const handleCategoryFilter = (category: string) => {

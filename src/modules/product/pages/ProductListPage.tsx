@@ -10,15 +10,16 @@ import type { Product } from "../types/index.ts";
 
 export default function ProductListPage() {
   const dispatch = useAppDispatch();
-  const { filteredProducts, loading, error } = useAppSelector(
+  const { filteredProducts, loading, error, products } = useAppSelector(
     (state) => state.products
   );
+  console.log("filteredProducts", filteredProducts);
 
   useEffect(() => {
-    if (filteredProducts.length === 0) {
+    if (products.length === 0) {
       dispatch(fetchProducts());
     }
-  }, [dispatch, filteredProducts.length]);
+  }, [dispatch, products.length]);
 
   useEffect(() => {
     console.log(
@@ -27,7 +28,7 @@ export default function ProductListPage() {
     );
   }, [filteredProducts]);
 
-  if (loading) {
+  if (loading && filteredProducts.length === 0) {
     return (
       <div className="flex justify-center items-center h-64">
         <div className="text-lg">Yükleniyor...</div>
@@ -57,16 +58,18 @@ export default function ProductListPage() {
 
       <ProductFilters />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {filteredProducts.map((product: Product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
-      </div>
-
-      {filteredProducts.length === 0 && (
-        <div className="text-center py-12">
-          <p className="text-gray-500 text-lg">Ürün bulunamadı</p>
+      {filteredProducts.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {filteredProducts.map((product: Product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
         </div>
+      ) : (
+        !loading && (
+          <div className="text-center py-12">
+            <p className="text-gray-500 text-lg">Ürün bulunamadı</p>
+          </div>
+        )
       )}
     </div>
   );
